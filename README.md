@@ -24,6 +24,20 @@ Bu proje, gerçek zamanlı yüz ifadesi tanıma (facial expression recognition) 
 - Unity (URP, Shader Graph)
 - Git LFS kullanılmaz (veri dosyaları hariç tutulmuştur)
 
+## 📁 Proje Klasör Yapısı
+
+facial_expression/
+│
+├── data/               # (Git tarafından takip edilmiyor - fer2013.csv gibi büyük veri dosyaları burada tutulur)
+├── models/             # Eğitilmiş CNN model dosyaları (örn. .pth uzantılı)
+├── notebooks/          # Veri analizi veya model denemeleri için Jupyter defterleri
+├── src/                # Python kaynak dosyaları (eğitim, tahmin, veri işleme)
+│   ├── train_cnn_model_cv.py
+│   ├── predict_cnn.py
+│   └── ...
+├── .gitignore          # Büyük dosyaları ve geçici klasörleri hariç tutmak için
+├── README.md           # Proje hakkında özet bilgi (bu dosya)
+└── requirements.txt    # Gerekli Python kütüphaneleri (PyTorch, torchvision, OpenCV vb.)
 
 ## 📝 Notlar
 
