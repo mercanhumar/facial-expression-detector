@@ -24,5 +24,10 @@ Bu proje, gerçek zamanlı yüz ifadesi tanıma (facial expression recognition) 
 - Unity (URP, Shader Graph)
 - Git LFS kullanılmaz (veri dosyaları hariç tutulmuştur)
 
-## 🗂️ Klasör Yapısı
+
+## 📝 Notlar
+
+- `data/fer2013.csv` gibi büyük dosyalar Git geçmişinden temizlenmiştir.
+- Proje sadece kodları içerir, veri dosyaları ayrı yedeklenmelidir.
+
 
