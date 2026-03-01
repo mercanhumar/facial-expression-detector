@@ -1,5 +1,9 @@
 # Facial Expression Recognition System
 
+<p align="center">
+  <img src="assets/demo.gif" width="720">
+</p>
+
 Real-time facial expression recognition using EfficientNet-B0, trained on the FERPlus dataset and deployed via webcam with MTCNN face detection.
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
