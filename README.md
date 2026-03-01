@@ -1,122 +1,118 @@
-# 🎭 Facial Expression Recognition & Emotion-Adaptive Game
+# Facial Expression Recognition System
 
-> **Real-time facial expression recognition system** integrated into a Unity-based psychological thriller game, dynamically adapting the atmosphere based on the player’s emotions.
+Real-time facial expression recognition using EfficientNet-B0, trained on the FERPlus dataset and deployed via webcam with MTCNN face detection.
 
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)  
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c)](https://pytorch.org/)  
-[![Unity](https://img.shields.io/badge/Unity-2022+-black)](https://unity.com/)  
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
-
----
-
-## 🔍 Overview
-
-This project implements a **real-time facial expression recognition (FER) system** that interacts with a Unity game.  
-A **CNN model trained with PyTorch** on the FER2013 dataset detects the player’s facial expressions from the webcam,  
-and sends the results via TCP to Unity, where **lighting, colors, and sound** adapt dynamically to the detected emotion.
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
-## 🚀 Features
+## Overview
 
-- **Emotion Classes:** `Angry`, `Disgust`, `Fear`, `Happy`, `Sad`, `Surprise`, `Neutral`
-- **Ensemble CNN Model** using 5-fold cross-validation for stable predictions
-- **Real-time detection** with OpenCV & PyTorch
-- **Unity Integration** using TCP sockets
-- **Atmosphere Adaptation** via Shader Graph in Unity
+This project trains a CNN-based emotion classifier on the FERPlus dataset and runs real-time inference from a webcam feed. It detects faces using MTCNN, classifies 7 emotion classes, and applies smoothing and neutral bias correction for stable predictions.
 
 ---
 
-## 🧠 Tech Stack
+## Features
 
-**AI & Data Processing**
-- PyTorch, torchvision  
-- OpenCV, NumPy  
-
-**Game Development**
-- Unity (URP, Shader Graph)  
-- TCP Networking for live data transfer  
-
-**Version Control**
-- Git & GitHub  
-- `.gitignore` excludes large datasets  
+- **7 Emotion Classes:** Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral
+- **EfficientNet-B0** backbone fine-tuned on FERPlus
+- **MTCNN** face detection (selects largest face in frame)
+- **5-frame majority voting** for prediction smoothing
+- **Neutral bias correction** to reduce false positives
+- **Class-weighted loss** to handle dataset imbalance
+- Real-time webcam inference with FPS display
 
 ---
 
-## 📁 Project Structure
+## Tech Stack
+
+- PyTorch, torchvision
+- facenet-pytorch (MTCNN)
+- OpenCV, NumPy, Pillow
+
+---
+
+## Project Structure
 
 ```
-
-facial\_expression/
-│
-├── data/               # Not tracked by Git (e.g., fer2013.csv)
-├── models/             # Trained CNN model files (.pth)
+facial_expression/
+├── data/               # Not tracked by Git (FERPlus dataset)
+├── models/             # Not tracked by Git (.pth model files)
+│   └── classes.json
 ├── notebooks/          # Jupyter notebooks for experiments
-├── src/                # Python scripts (training, prediction, preprocessing)
-│   ├── train\_cnn\_model\_cv.py
-│   ├── predict\_cnn.py
-│   └── ...
+├── src/
+│   ├── train_efficientnet_b0_ferplus.py
+│   └── predict_efficientnet_b0_unity.py
 ├── .gitignore
 ├── README.md
 └── requirements.txt
-
 ```
 
 ---
 
-## 🖥️ System Architecture
+## Installation
 
-```
-
-\[Webcam]
-│ (video frames)
-▼
-\[PyTorch CNN Model] -- predicts --> \[Emotion Label]
-│
-▼ (TCP Socket)
-\[Unity Game Engine] -- updates --> \[Lighting / Colors / Sound]
-
-````
-
----
-
-## ⚙️ Installation & Usage
-
-**1️⃣ Clone the repository**
+**1. Clone the repository**
 ```bash
-git clone https://github.com/yourusername/facial_expression_game.git
-cd facial_expression_game
-````
+git clone https://github.com/mercanhumar/facial_expression.git
+cd facial_expression
+```
 
-**2️⃣ Install dependencies**
-
+**2. Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-**3️⃣ Run real-time emotion prediction**
+**3. Prepare dataset**
 
-```bash
-python src/predict_cnn.py
+Download the [FERPlus dataset](https://github.com/microsoft/FERPlus) and place it under:
+```
+data/ferplus/train/<emotion>/
+data/ferplus/val/<emotion>/
 ```
 
-**4️⃣ Unity integration**
+**4. Train the model**
+```bash
+python src/train_efficientnet_b0_ferplus.py
+```
 
-* Unity listens on the same TCP port as `predict_cnn.py` output.
-* The received emotion updates the scene atmosphere.
-
----
-
-## 📝 Notes
-
-* FER2013 dataset is stored locally and **not included** in this repository.
-* All large files (e.g., `.csv`, `.pth`) are excluded via `.gitignore`.
-* Models are trained offline and stored in `/models`.
+**5. Run real-time prediction**
+```bash
+python src/predict_efficientnet_b0_unity.py
+```
 
 ---
 
-## 📜 License
+## How It Works
 
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+```
+[Webcam]
+    |
+    v
+[MTCNN Face Detection] --> selects largest face
+    |
+    v
+[EfficientNet-B0] --> softmax over 7 classes
+    |
+    v
+[Neutral Bias + 5-frame Smoothing] --> stable emotion label
+    |
+    v
+[OpenCV Display] --> bounding box + emotion label + FPS
+```
 
 ---
+
+## Notes
+
+- FERPlus dataset and `.pth` model files are excluded via `.gitignore`
+- Model is saved automatically when validation accuracy improves during training
+- Set `SEND_TO_UNITY = True` in `predict_efficientnet_b0_unity.py` to enable TCP socket output
+
+---
+
+## License
+
+MIT License
