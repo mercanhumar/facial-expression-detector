@@ -1,0 +1,25 @@
+# Bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# Dataset (large files)
+data/
+
+# Trained model weights
+models/*.pth
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Environment
+venv/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
